@@ -1,27 +1,43 @@
-import { useState } from 'react'
+import { useCharacterStore } from '../store/characterStore'
+import type { AssetCategory } from '../store/characterStore'
 
-const categories = [
-  'head',
-  'hair',
-  'body',
-  'top',
-  'bottom',
-  'shoes',
-] as const
+const categories: {
+  id: AssetCategory
+  label: string
+}[] = [
+  { id: 'body', label: 'BODY' },
+  { id: 'head', label: 'HEAD' },
+  { id: 'hair', label: 'HAIR' },
+  { id: 'top', label: 'TOP' },
+  { id: 'bottom', label: 'BOTTOM' },
+  { id: 'shoes', label: 'SHOES' },
+]
 
 function ModelMenu() {
-  const [activeCategory, setActiveCategory] = useState('bottom')
+  const activeCategory = useCharacterStore(
+    (state) => state.activeCategory,
+  )
+
+  const setActiveCategory = useCharacterStore(
+    (state) => state.setActiveCategory,
+  )
 
   return (
     <nav className="model-menu">
-      {/* Model categories */}
       {categories.map((category) => (
         <button
-          key={category}
-          className={activeCategory === category ? 'active' : ''}
-          onClick={() => setActiveCategory(category)}
+          key={category.id}
+          type="button"
+          className={
+            activeCategory === category.id
+              ? 'active'
+              : ''
+          }
+          onClick={() =>
+            setActiveCategory(category.id)
+          }
         >
-          {category.toUpperCase()}
+          {category.label}
         </button>
       ))}
     </nav>

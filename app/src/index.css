@@ -377,6 +377,14 @@ button {
 
   padding: 12px;
 
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  grid-auto-rows: 90px;
+
+  gap: 10px;
+
   border: 1px solid #2c2c30;
 
   border-radius: 4px;
@@ -387,6 +395,52 @@ button {
   overflow-x: hidden;
 }
 
+.asset-option {
+ width: 100%;
+  height: 90px;
+
+  min-width: 0;
+
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ffffff;
+
+  border-radius: 4px;
+
+  background: rgba(250, 250, 250, 0.5);
+
+  color: #4a4a4f;
+
+  cursor: pointer;
+}
+
+.asset-option:hover {
+  border-color: #2c2c30;
+}
+
+.asset-option.active {
+  border: 2px solid #2c2c30;
+}
+
+.asset-placeholder {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.asset-thumbnail {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 3px;
+}
 
 /* =========================================================
    RIGHT-SIDE PANELS

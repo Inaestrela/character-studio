@@ -1,23 +1,75 @@
 import { X } from 'lucide-react'
+import { useCharacterStore } from '../store/characterStore'
+import { assetCatalog } from '../data/assets/catalog'
 
 function ModelInventoryPanel() {
+  const activeCategory = useCharacterStore(
+    (state) => state.activeCategory,
+  )
+
+  const selectedAsset = useCharacterStore(
+    (state) => state[activeCategory],
+  )
+
+  const setPart = useCharacterStore(
+    (state) => state.setPart,
+  )
+
+  const assets = assetCatalog.filter(
+    (asset) => asset.category === activeCategory,
+  )
+
   return (
     <section className="asset-panel">
 
       {/* Panel title */}
       <div className="panel-header">
-        <span>BOTTOM</span>
+        <span>
+          {activeCategory.toUpperCase()}
+        </span>
 
-        <button type="button" aria-label="Close inventory">
+        <button
+          type="button"
+          aria-label="Close inventory"
+        >
           <X size={18} strokeWidth={2} />
         </button>
       </div>
 
       {/* Panel inventory */}
       <div className="asset-inventory">
-        {/* Inner inventory / thumbnail container */}
+
+        {/* Inner inventory */}
         <div className="asset-selection">
-          {/* Asset thumbnails will be added here later */}
+
+          {assets.map((asset) => (
+            <button
+              key={asset.id}
+              type="button"
+              className={
+                selectedAsset === asset.id
+                  ? 'asset-option active'
+                  : 'asset-option'
+              }
+              onClick={() =>
+                setPart(activeCategory, asset.id)
+              }
+            >
+              {/* Asset thumbnails */}
+              {asset.thumbnail ? (
+                <img
+                  src={asset.thumbnail}
+                  alt={asset.name}
+                  className="asset-thumbnail"
+                />
+              ) : (
+                <span className="asset-placeholder">
+                  {asset.id}
+                </span>
+              )}
+            </button>
+          ))}
+
         </div>
 
       </div>

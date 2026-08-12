@@ -10,12 +10,25 @@ type CharacterConfig = {
   base: string
 }
 
+export type AssetCategory =
+  | 'body'
+  | 'head'
+  | 'hair'
+  | 'top'
+  | 'bottom'
+  | 'shoes'
+
 type CharacterStore = CharacterConfig & {
+  activeCategory: AssetCategory
   selectedColor: string
 
   setPart: (
     part: keyof CharacterConfig,
     value: string
+  ) => void
+
+  setActiveCategory: (
+    category: AssetCategory
   ) => void
 
   setSelectedColor: (color: string) => void
@@ -31,13 +44,20 @@ export const useCharacterStore = create<CharacterStore>((set) => ({
   shoes: 'shoes_01',
   base: 'base_01',
 
-  /* Default selected color */
+  /* Default UI state */
+  activeCategory: 'body',
   selectedColor: '#FAFAFA',
 
-  /* Update a character part */
+  /* Update character part */
   setPart: (part, value) =>
     set({
       [part]: value,
+    }),
+
+  /* Change inventory category */
+  setActiveCategory: (category) =>
+    set({
+      activeCategory: category,
     }),
 
   /* Update selected color */
