@@ -1,111 +1,720 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
+html,
+body,
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+* {
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
+  overflow: hidden;
+
+  font-family: 'Geist Mono Variable', monospace;
+
+  background: #e5e5e9;
+  color: #4a4a4f;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+button {
+  font-family: inherit;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+/* =========================================================
+   APPLICATION SHELL
+   ========================================================= */
+
+.app {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  background: #e5e5e9;
 }
-h2 {
+
+/* Background grid */
+.app::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(74, 74, 79, 0.18) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(74, 74, 79, 0.18) 1px,
+      transparent 1px
+    );
+
+  background-size: 50px 50px;
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header-section {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 105px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 32px;
+
+  z-index: 20;
+}
+
+.header-left,
+.header-right {
+  width: 180px;
+}
+
+.header-title {
   font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+
+  color: #ffffff;
+}
+
+.header-title span {
+  color: #8c8c94;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.icon-button svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  float: right;
+
+  padding: 5px 14px;
+
+  border: 1px solid #4a4a4f;
+  border-radius: 18px;
+
+  background: transparent;
+
+  color: #4a4a4f;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   CATEGORY MENU
+   ========================================================= */
+
+.model-menu {
+  position: absolute;
+
+  top: 110px;
+  left: 40px;
+
+  display: flex;
+
+  gap: 10px;
+
+  max-width: calc(100% - 80px);
+
+  overflow-x: auto;
+
+  padding-bottom: 4px;
+
+  z-index: 20;
+}
+
+.model-menu button {
+  flex: 0 0 auto;
+
+  padding: 5px 12px;
+
+  border: 2px solid #2c2c30;
+  border-radius: 16px;
+
+  background: rgba(250, 250, 250, 0.8);
+
+  color: #4a4a4f;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  box-shadow:
+    2px 2px 0 rgba(44, 44, 48, 0.25);
+
+  cursor: pointer;
+}
+
+.model-menu button:hover {
+  border-color: #ffffff;
+}
+
+.model-menu button.active {
+  border-color: #ffffff;
+}
+
+
+/* =========================================================
+   LEFT INVENTORY
+   ========================================================= */
+
+.float-left {
+  position: absolute;
+
+  top: 170px;
+  left: 40px;
+
+  width: clamp(260px, 22vw, 360px);
+
+  max-height: calc(100vh - 210px);
+
+  z-index: 20;
+}
+
+
+/* =========================================================
+   STANDARD ASSET PANEL
+   ========================================================= */
+
+/*
+ * Outer structural container.
+ * No border.
+ * Shadow belongs directly to this container.
+ */
+.asset-panel {
+  width: 100%;
+
+  height: calc(100vh - 220px);
+
+  min-height: 280px;
+  max-height: 700px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: transparent;
+
+  box-shadow:
+    4px 4px 0 rgba(44, 44, 48, 0.18);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+/*
+ * Header sits above the inventory container.
+ * Bottom border is intentionally removed.
+ */
+.panel-header {
+  width: 100%;
+
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 10px;
+
+  border: 3px solid #c4c4c4;
+  border-bottom: 0;
+
+  background: rgba(229, 229, 233, 0.8);
+
+  color: #4a4a4f;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.panel-header button {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #4a4a4f;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   ASSET INVENTORY
+   ========================================================= */
+
+/*
+ * Second container inside the outer panel.
+ *
+ * Contains:
+ * - MAKE IT STYLISH label
+ * - inner inventory viewport
+ */
+.asset-inventory {
+  flex: 1;
+
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 16px 14px 50px;
+
+  border: 2px solid #2c2c30;
+
+  background: rgba(250, 250, 250, 0.6);
+
+  overflow: hidden;
+}
+
+
+/* Inventory label */
+.asset-inventory::before {
+  content: 'MAKE IT STYLISH';
+
+  flex-shrink: 0;
+
+  display: block;
+
+  margin-bottom: 16px;
+
+  color: #4a4a4f;
+
+  font-size: 11px;
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   INNER INVENTORY VIEWPORT
+   ========================================================= */
+
+/*
+ * Third container.
+ *
+ * Thin black outline.
+ * Slightly rounded corners.
+ * Own scrollbar for large inventories.
+ */
+.asset-selection {
+  flex: 1;
+
+  min-height: 0;
+
+  width: 100%;
+
+  padding: 12px;
+
+  border: 1px solid #2c2c30;
+
+  border-radius: 4px;
+
+  background: rgba(250, 250, 250, 0.4);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   RIGHT-SIDE PANELS
+   ========================================================= */
+
+.float-right {
+  position: absolute;
+
+  top: 136px;
+  right: 32px;
+
+  width: clamp(220px, 18vw, 300px);
+
+  max-height: calc(100vh - 170px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-bottom: 10px;
+
+  z-index: 20;
+}
+
+
+/* =========================================================
+   COLOR PANEL
+   ========================================================= */
+
+/*
+ * Color follows the same outer/header/content structure.
+ *
+ * Unlike asset panels, Color does not have
+ * the third inner inventory container.
+ */
+.color-panel {
+  width: 100%;
+  max-width: 280px;
+  height: clamp(220px, 30vh, 300px);
+
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: transparent;
+
+  box-shadow:
+    4px 4px 0 rgba(44, 44, 48, 0.18);
+
+  overflow: hidden;
+}
+
+
+/* Color content */
+.color-grid {
+  flex: 1;
+
+  min-height: 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(28px, 1fr));
+
+  grid-auto-rows: min-content;
+
+  gap: 10px;
+
+  padding: 18px 16px;
+
+  border: 2px solid #2c2c30;
+
+  background: rgba(250, 250, 250, 0.4);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* Color buttons */
+.color-option {
+  width: 28px;
+  height: 28px;
+
+  margin: auto;
+
+  border: 1px solid #2c2c30;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.color-option:hover {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.color-option.active {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.actions {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-top: 25px;
+
+  padding-bottom: 10px;
+}
+
+.actions button {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 9px 16px;
+
+  border: 2px solid #2c2c30;
+  border-radius: 18px;
+
+  background: rgba(250, 250, 250, 0.8);
+
+  box-shadow: 3px 3px 0 rgba(44, 44, 48, 0.18);
+
+  color: #4a4a4f;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.actions button:hover {
+  border-color: #ffffff;
+}
+
+.actions button.active {
+  border-color: #ffffff;
+}
+
+
+/* =========================================================
+   3D STAGE
+   ========================================================= */
+
+.stage-container {
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 5;
+}
+
+
+/* =========================================================
+   VIEWER / SPIN CONTROLS
+   ========================================================= */
+
+.model-spin-controls {
+  position: absolute;
+
+  left: 50%;
+  bottom: 30px;
+
+  transform: translateX(-50%);
+
+  display: flex;
+
+  gap: 35px;
+
+  z-index: 10;
+}
+
+.model-spin-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #4a4a4f;
+
+  cursor: pointer;
+}
+
+.model-spin-controls svg {
+  stroke-width: 3;
+}
+
+
+/* =========================================================
+   SCROLLBARS
+   ========================================================= */
+
+.color-grid,
+.asset-selection,
+.float-right {
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #8c8c94
+    transparent;
+}
+
+.color-grid::-webkit-scrollbar,
+.asset-selection::-webkit-scrollbar,
+.float-right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.color-grid::-webkit-scrollbar-track,
+.asset-selection::-webkit-scrollbar-track,
+.float-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.color-grid::-webkit-scrollbar-thumb,
+.asset-selection::-webkit-scrollbar-thumb,
+.float-right::-webkit-scrollbar-thumb {
+  background: #8c8c94;
+
+  border-radius: 6px;
+}
+
+
+/* =========================================================
+   SHORT BROWSER HEIGHTS
+   ========================================================= */
+
+@media (max-height: 750px) {
+  .header-section {
+    height: 80px;
+  }
+
+  .model-menu {
+    top: 85px;
+  }
+
+  .float-left {
+    top: 135px;
+
+    max-height: calc(100vh - 175px);
+  }
+
+  .asset-panel {
+    height: calc(100vh - 175px);
+  }
+
+  .float-right {
+    top: 110px;
+
+    max-height: calc(100vh - 125px);
+  }
+
+  .model-spin-controls {
+    bottom: 15px;
   }
 }
-p {
-  margin: 0;
+
+
+/* =========================================================
+   NARROW SCREENS
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .float-left {
+    width: clamp(220px, 28vw, 300px);
+
+    left: 20px;
+  }
+
+  .float-right {
+    width: clamp(200px, 24vw, 260px);
+
+    right: 20px;
+  }
+
+  .header-section {
+    padding: 0 20px;
+  }
+
+  .header-left,
+  .header-right {
+    width: 140px;
+  }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* =========================================================
+   VERY NARROW SCREENS
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .float-left {
+    left: 12px;
+
+    width: min(260px, calc(50vw - 18px));
+  }
+
+  .float-right {
+    right: 12px;
+
+    width: min(220px, calc(50vw - 18px));
+  }
+
+  .color-grid {
+    grid-template-columns:
+      repeat(auto-fit, minmax(28px, 1fr));
+
+    gap: 8px;
+
+    padding: 12px;
+  }
+
+  .color-option {
+    width: 26px;
+    height: 26px;
+  }
 }
