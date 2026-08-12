@@ -11,7 +11,14 @@ type CharacterConfig = {
 }
 
 type CharacterStore = CharacterConfig & {
-  setPart: (part: keyof CharacterConfig, value: string) => void
+  selectedColor: string
+
+  setPart: (
+    part: keyof CharacterConfig,
+    value: string
+  ) => void
+
+  setSelectedColor: (color: string) => void
 }
 
 export const useCharacterStore = create<CharacterStore>((set) => ({
@@ -24,9 +31,18 @@ export const useCharacterStore = create<CharacterStore>((set) => ({
   shoes: 'shoes_01',
   base: 'base_01',
 
+  /* Default selected color */
+  selectedColor: '#FAFAFA',
+
   /* Update a character part */
   setPart: (part, value) =>
     set({
       [part]: value,
+    }),
+
+  /* Update selected color */
+  setSelectedColor: (color) =>
+    set({
+      selectedColor: color,
     }),
 }))

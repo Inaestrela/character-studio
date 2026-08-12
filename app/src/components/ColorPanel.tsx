@@ -31,6 +31,7 @@ function ColorPanel() {
 
   return (
     <section className="color-panel">
+
       {/* Color panel header */}
       <div className="panel-header">
         <span>COLOR</span>
@@ -50,6 +51,7 @@ function ColorPanel() {
           />
         ))}
       </div>
+
     </section>
   )
 }
