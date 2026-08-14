@@ -55,18 +55,10 @@ function ModelInventoryPanel() {
                 setPart(activeCategory, asset.id)
               }
             >
-              {/* Asset thumbnails */}
-              {asset.thumbnail ? (
-                <img
-                  src={asset.thumbnail}
-                  alt={asset.name}
-                  className="asset-thumbnail"
-                />
-              ) : (
-                <span className="asset-placeholder">
-                  {asset.id}
-                </span>
-              )}
+              <img
+                src={asset.thumbnail}
+                alt={asset.name}
+              />
             </button>
           ))}
 
