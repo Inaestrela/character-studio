@@ -5,6 +5,8 @@ export type AssetCategory =
   | 'top'
   | 'bottom'
   | 'shoes'
+  | 'base'
+
 
 export type Asset = {
   id: string
@@ -15,6 +17,15 @@ export type Asset = {
 }
 
 export const assetCatalog: Asset[] = [
+    // BASE
+  {
+    id: 'base_01',
+    category: 'base',
+    name: 'Base 01',
+    model: '/assets/models/base/Dummy_base_001.glb',
+    thumbnail: '/assets/thumbnails/base/Dummy_base_001.webp',
+  },
+  
   // BODY
   {
     id: 'body_01',

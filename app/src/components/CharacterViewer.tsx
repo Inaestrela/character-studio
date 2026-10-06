@@ -1,9 +1,13 @@
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, useGLTF } from '@react-three/drei'
+import * as THREE from 'three'
+import { useEffect, useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Environment, useGLTF } from '@react-three/drei'
 import { useCharacterStore } from '../store/characterStore'
 import { getAsset } from '../data/assets/getAsset'
-
+import { Component, type ReactNode } from 'react'
 import type { AssetCategory } from '../store/characterStore'
+
+const BASE_MODEL = '/assets/models/base/base.glb'
 
 type CharacterConfig = {
   body: string
@@ -13,6 +17,47 @@ type CharacterConfig = {
   bottom: string
   shoes: string
   base: string
+}
+
+type CharacterViewerProps = {
+  rotation: number
+  isRotating: boolean
+  onRotationChange: (rotation: number) => void
+}
+
+/* Handle missing or invalid GLB models */
+class ModelErrorBoundary extends Component<
+  {
+    children: ReactNode
+    model: string
+  },
+  {
+    hasError: boolean
+  }
+> {
+  state = {
+    hasError: false,
+  }
+
+  static getDerivedStateFromError() {
+    return {
+      hasError: true,
+    }
+  }
+
+  componentDidCatch() {
+    console.warn(
+      `Failed to load model: ${this.props.model}`,
+    )
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null
+    }
+
+    return this.props.children
+  }
 }
 
 /* Load one GLB model */
@@ -30,7 +75,6 @@ function LoadedModel({
   )
 }
 
-/* Generic character part */
 function ModelPart({
   category,
   type,
@@ -41,35 +85,63 @@ function ModelPart({
   const asset = getAsset(category, type)
 
   if (!asset) {
+    console.warn(
+      `Missing asset: category="${category}", id="${type}"`,
+    )
+
     return null
   }
 
   return (
+  <ModelErrorBoundary model={asset.model}>
     <LoadedModel model={asset.model} />
-  )
+  </ModelErrorBoundary>
+)
 }
 
-/* Figurine base */
-function Base() {
-  return (
-    <mesh position={[0, -0.7, 0]}>
-      <cylinderGeometry
-        args={[1.2, 1.2, 0.3, 32]}
-      />
-
-      <meshStandardMaterial color="#d0d0d0" />
-    </mesh>
-  )
-}
 
 /* Complete character */
 function Character({
   config,
+  rotation,
+  isRotating,
+  onRotationChange,
 }: {
   config: CharacterConfig
+  rotation: number
+  isRotating: boolean
+  onRotationChange: (rotation: number) => void
 }) {
+  const characterGroup = useRef<THREE.Group>(null)
+
+  /* Keep the model rotation synchronized with the viewer */
+  useEffect(() => {
+    if (!characterGroup.current) {
+      return
+    }
+
+    characterGroup.current.rotation.y = rotation
+  }, [rotation])
+
+  /* Automatic character rotation */
+  useFrame((_, delta) => {
+    if (!characterGroup.current || !isRotating) {
+      return
+    }
+
+    const nextRotation =
+      characterGroup.current.rotation.y + delta * 0.5
+
+    characterGroup.current.rotation.y = nextRotation
+
+    onRotationChange(nextRotation)
+  })
+
   return (
-    <group>
+    <group
+      ref={characterGroup}
+      rotation={[0, rotation, 0]}
+    >
       {/* Body */}
       <ModelPart
         category="body"
@@ -106,40 +178,60 @@ function Character({
         type={config.shoes}
       />
 
-      {/* Figurine base */}
-      <Base />
+     {/* Figurine base */}
+      <group position={[0, -0.15, 0]}>
+        <ModelErrorBoundary model={BASE_MODEL}>
+          <LoadedModel model={BASE_MODEL} />
+        </ModelErrorBoundary>
+      </group>
     </group>
   )
 }
 
 /* 3D SCENE */
-function CharacterViewer() {
+function CharacterViewer({
+  rotation,
+  isRotating,
+  onRotationChange,
+}: CharacterViewerProps) {
   const characterConfig = useCharacterStore()
 
   return (
     <Canvas
-      camera={{ position: [4, 4, 8] }}
-      gl={{ alpha: true }}
+      camera={{
+        position: [0, 5.8, 25],
+        fov: 35,
+      }}
+      onCreated={({ camera }) => {
+        camera.lookAt(0, 5.8, 0)
+      }}
+      gl={{
+        alpha: true,
+        antialias: true,
+      }}
       style={{
         background: 'transparent',
       }}
     >
-      {/* Scene lighting */}
-      <directionalLight
-        position={[5, 5, 5]}
-        intensity={1}
+      {/* HDRI lighting */}
+      <Environment
+        files="/hdri/forest.exr"
+        background={false}
+        environmentIntensity={0.7}
       />
 
-      <ambientLight intensity={0.5} />
+      {/* Back / fill light */}
+      <directionalLight
+        position={[0, 5, -5]}
+        intensity={1.5}
+      />
 
       {/* Character */}
       <Character
         config={characterConfig}
-      />
-
-      {/* Camera controls */}
-      <OrbitControls
-        target={[0, 3.3, 0]}
+        rotation={rotation}
+        isRotating={isRotating}
+        onRotationChange={onRotationChange}
       />
     </Canvas>
   )
